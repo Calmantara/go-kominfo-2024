@@ -26,6 +26,17 @@ func GinHttp() {
 	// big community
 	engine := gin.New()
 
+	// serve static template
+	// engine.LoadHTMLGlob("static/*")
+	engine.Static("/static", "./static")
+
+	engine.LoadHTMLGlob("template/*")
+	engine.GET("/template/index/:name", func(ctx *gin.Context) {
+		ctx.HTML(http.StatusOK, "index.tmpl", map[string]any{
+			"title": ctx.Param("name"),
+		})
+	})
+
 	// membuat prefix group
 	v1 := engine.Group("/api/v1")
 	{
