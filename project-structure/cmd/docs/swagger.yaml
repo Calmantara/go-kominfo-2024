@@ -1,0 +1,18 @@
+basePath: /
+host: localhost:3000
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: golong kominfo 006 api documentation
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: GO DTS USER API DUCUMENTATION
+  version: "2.0"
+paths: {}
+schemes:
+- http
+swagger: "2.0"

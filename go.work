@@ -1,4 +1,4 @@
-go 1.22.0
+go 1.22.1
 
 use (
 	./ch1
@@ -8,4 +8,6 @@ use (
 	./ch5
 	./ch6
 	./ch7
+	./ch8
+	./project-structure
 )
