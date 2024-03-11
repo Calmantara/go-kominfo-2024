@@ -55,7 +55,7 @@ func (u *userHandlerImpl) GetUsers(ctx *gin.Context) {
 //	@Param			id	path		int	true	"User ID"
 //	@Success		200	{object}	model.User
 //	@Failure		400	{object}	pkg.ErrorResponse
-//	@Failure		404	{object}	pkgErrorResponse
+//	@Failure		404	{object}	pkg.ErrorResponse
 //	@Failure		500	{object}	pkg.ErrorResponse
 //	@Router			/users/{id} [get]
 func (u *userHandlerImpl) GetUsersById(ctx *gin.Context) {

@@ -9,5 +9,6 @@ use (
 	./ch6
 	./ch7
 	./ch8
+	./ch9
 	./project-structure
 )
