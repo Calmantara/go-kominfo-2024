@@ -10,5 +10,6 @@ use (
 	./ch7
 	./ch8
 	./ch9
+	./go-middleware
 	./project-structure
 )
