@@ -83,6 +83,11 @@ func (u *userHandlerImpl) UserSignUp(ctx *gin.Context) {
 		return
 	}
 
+	if err := userSignUp.Validate(); err != nil {
+		ctx.JSON(http.StatusBadRequest, pkg.ErrorResponse{Message: err.Error()})
+		return
+	}
+
 	user, err := u.svc.SignUp(ctx, userSignUp)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, pkg.ErrorResponse{Message: err.Error()})

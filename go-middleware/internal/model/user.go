@@ -1,6 +1,9 @@
 package model
 
-import "time"
+import (
+	"errors"
+	"time"
+)
 
 type User struct {
 	ID        uint64    `json:"id"`
@@ -24,9 +27,22 @@ type UserMediaSocial struct {
 	DeletedAt time.Time `json:"deleted_at,omitempty"`
 }
 
+// https://blog.logrocket.com/gin-binding-in-go-a-tutorial-with-examples/
+// https://gin-gonic.com/docs/examples/binding-and-validation/
 type UserSignUp struct {
-	Username  string `json:"username"`
+	Username  string `json:"username" binding:"required"`
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
-	Password  string `json:"password"`
+	Password  string `json:"password" binding:"required"`
+}
+
+func (u UserSignUp) Validate() error {
+	// check username
+	if u.Username == "" {
+		return errors.New("invalid username")
+	}
+	if len(u.Password) < 6 {
+		return errors.New("invalid password")
+	}
+	return nil
 }

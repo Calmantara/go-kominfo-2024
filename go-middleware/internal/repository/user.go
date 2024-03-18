@@ -33,7 +33,7 @@ func (u *userQueryImpl) GetUsers(ctx context.Context) ([]model.User, error) {
 		WithContext(ctx).
 		Table("users").
 		Find(&users).Error; err != nil {
-		return nil, nil
+		return nil, err
 	}
 	return users, nil
 }
@@ -46,7 +46,7 @@ func (u *userQueryImpl) GetUsersByID(ctx context.Context, id uint64) (model.User
 		Table("users").
 		Where("id = ?", id).
 		Find(&users).Error; err != nil {
-		return model.User{}, nil
+		return model.User{}, err
 	}
 	return users, nil
 }
@@ -57,7 +57,7 @@ func (u *userQueryImpl) CreateUser(ctx context.Context, user model.User) (model.
 		WithContext(ctx).
 		Table("users").
 		Save(&user).Error; err != nil {
-		return model.User{}, nil
+		return model.User{}, err
 	}
 	return user, nil
 }
