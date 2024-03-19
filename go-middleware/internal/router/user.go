@@ -30,4 +30,5 @@ func (u *userRouterImpl) Mount() {
 	u.v.GET("", u.handler.GetUsers)
 	// /users/:id
 	u.v.GET("/:id", u.handler.GetUsersById)
+	u.v.DELETE("/:id", u.handler.DeleteUsersById)
 }

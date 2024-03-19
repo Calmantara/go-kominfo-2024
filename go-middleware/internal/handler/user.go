@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/Calmantara/go-kominfo-2024/go-middleware/internal/middleware"
 	"github.com/Calmantara/go-kominfo-2024/go-middleware/internal/model"
 	"github.com/Calmantara/go-kominfo-2024/go-middleware/internal/service"
 	"github.com/Calmantara/go-kominfo-2024/go-middleware/pkg"
@@ -11,8 +12,12 @@ import (
 )
 
 type UserHandler interface {
+	// users
 	GetUsers(ctx *gin.Context)
 	GetUsersById(ctx *gin.Context)
+	DeleteUsersById(ctx *gin.Context)
+
+	// activity
 	UserSignUp(ctx *gin.Context)
 }
 
@@ -72,6 +77,10 @@ func (u *userHandlerImpl) GetUsersById(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, pkg.ErrorResponse{Message: err.Error()})
 		return
 	}
+	if user.ID == 0 {
+		ctx.JSON(http.StatusNotFound, pkg.ErrorResponse{Message: "user not found"})
+		return
+	}
 	ctx.JSON(http.StatusOK, user)
 }
 
@@ -102,4 +111,54 @@ func (u *userHandlerImpl) UserSignUp(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, map[string]any{
 		"token": token,
 	})
+}
+
+// DeleteUsersById godoc
+//
+//		@Summary		Delete user by selected id
+//		@Description	will delete user with given id from param
+//		@Tags			users
+//		@Accept			json
+//		@Produce		json
+//	 	@Param 			Authorization header string true "bearer token"
+//		@Param			id	path		int	true	"User ID"
+//		@Success		200	{object}	model.User
+//		@Failure		400	{object}	pkg.ErrorResponse
+//		@Failure		404	{object}	pkg.ErrorResponse
+//		@Failure		500	{object}	pkg.ErrorResponse
+//		@Router			/users/{id} [delete]
+func (u *userHandlerImpl) DeleteUsersById(ctx *gin.Context) {
+	// get id user
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if id == 0 || err != nil {
+		ctx.JSON(http.StatusBadRequest, pkg.ErrorResponse{Message: "invalid required param"})
+		return
+	}
+
+	// check user id session from context
+	userId, ok := ctx.Get(middleware.CLAIM_USER_ID)
+	if !ok {
+		ctx.JSON(http.StatusUnauthorized, pkg.ErrorResponse{Message: "invalid user session"})
+		return
+	}
+	userIdInt, ok := userId.(float64)
+	if !ok {
+		ctx.JSON(http.StatusBadRequest, pkg.ErrorResponse{Message: "invalid user id session"})
+		return
+	}
+	if id != int(userIdInt) {
+		ctx.JSON(http.StatusUnauthorized, pkg.ErrorResponse{Message: "invalid user request"})
+		return
+	}
+
+	user, err := u.svc.DeleteUsersById(ctx, uint64(id))
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, pkg.ErrorResponse{Message: err.Error()})
+		return
+	}
+	if user.ID == 0 {
+		ctx.JSON(http.StatusNotFound, pkg.ErrorResponse{Message: "user not found"})
+		return
+	}
+	ctx.JSON(http.StatusOK, user)
 }

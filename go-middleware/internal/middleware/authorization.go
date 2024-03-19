@@ -14,6 +14,9 @@ import (
 const (
 	STATIC_USERNAME = "golang006awesome"
 	STATIC_PASSWORD = "mysecretpassword"
+
+	CLAIM_USER_ID  = "claim_user_id"
+	CLAIM_USERNAME = "claim_username"
 )
 
 func CheckAuthBasic(ctx *gin.Context) {
@@ -83,6 +86,7 @@ func CheckAuthBearer(ctx *gin.Context) {
 		})
 		return
 	}
-	_ = claims
+	ctx.Set(CLAIM_USER_ID, claims["user_id"])
+	ctx.Set(CLAIM_USERNAME, claims["username"])
 	ctx.Next()
 }

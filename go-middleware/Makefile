@@ -1,2 +1,4 @@
 swag:
-	swag init -g main.go -o docs
+	swag init -g cmd/main.go -o cmd/docs
+cover:
+	go test -cover ./...

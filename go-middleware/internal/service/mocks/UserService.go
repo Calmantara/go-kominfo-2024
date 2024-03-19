@@ -14,6 +14,34 @@ type UserService struct {
 	mock.Mock
 }
 
+// DeleteUsersById provides a mock function with given fields: ctx, id
+func (_m *UserService) DeleteUsersById(ctx context.Context, id uint64) (model.User, error) {
+	ret := _m.Called(ctx, id)
+
+	if len(ret) == 0 {
+		panic("no return value specified for DeleteUsersById")
+	}
+
+	var r0 model.User
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, uint64) (model.User, error)); ok {
+		return rf(ctx, id)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, uint64) model.User); ok {
+		r0 = rf(ctx, id)
+	} else {
+		r0 = ret.Get(0).(model.User)
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context, uint64) error); ok {
+		r1 = rf(ctx, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // GenerateUserAccessToken provides a mock function with given fields: ctx, user
 func (_m *UserService) GenerateUserAccessToken(ctx context.Context, user model.User) (string, error) {
 	ret := _m.Called(ctx, user)

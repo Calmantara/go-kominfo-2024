@@ -116,6 +116,61 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "delete": {
+                "description": "will delete user with given id from param",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Delete user by selected id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "bearer token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/pkg.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/pkg.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/pkg.ErrorResponse"
+                        }
+                    }
+                }
             }
         }
     },
@@ -123,25 +178,20 @@ const docTemplate = `{
         "model.User": {
             "type": "object",
             "properties": {
-                "createdAt": {
-                    "type": "string"
-                },
-                "deleted_at": {
+                "created_at": {
                     "type": "string"
                 },
                 "dob": {
                     "type": "string"
                 },
-                "first_name": {
+                "email": {
+                    "description": "FirstName string    ` + "`" + `json:\"first_name\"` + "`" + `\nLastName  string    ` + "`" + `json:\"last_name\"` + "`" + `",
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "last_name": {
-                    "type": "string"
-                },
-                "updatedAt": {
+                "updated_at": {
                     "type": "string"
                 },
                 "username": {
@@ -152,6 +202,12 @@ const docTemplate = `{
         "pkg.ErrorResponse": {
             "type": "object",
             "properties": {
+                "errors": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
                 "message": {
                     "type": "string"
                 }
@@ -170,6 +226,8 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "golong kominfo 006 api documentation",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
+	LeftDelim:        "{{",
+	RightDelim:       "}}",
 }
 
 func init() {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"net/http"
 	"time"
 
@@ -37,6 +38,15 @@ func main() {
 	// requirement technical:
 	// [x] middleware untuk recover ketika panic
 	// [x] mengecheck basic auth
+	assignment3()
+}
+
+// Product:
+// authorization menggunakan jwt
+// authentication bisa dilakukan dengan login
+// ketika user login, akan memunculkan JWT ketika success
+
+func server() {
 	g := gin.Default()
 	g.Use(gin.Recovery())
 
@@ -88,7 +98,27 @@ func main() {
 	g.Run(":3000")
 }
 
-// Product:
-// authorization menggunakan jwt
-// authentication bisa dilakukan dengan login
-// ketika user login, akan memunculkan JWT ketika success
+func assignment3() {
+	g := gin.Default()
+
+	data := map[string]any{}
+
+	go func() {
+		for {
+			// read json file
+			// update json file
+			data["water"] = rand.Int31n(100)
+			data["wind"] = rand.Int31n(100)
+			data["fire"] = rand.Int31n(100)
+			data["earth"] = rand.Int31n(100)
+			time.Sleep(15 * time.Second)
+		}
+	}()
+
+	g.GET("/data", func(ctx *gin.Context) {
+		ctx.JSON(http.StatusOK, map[string]any{
+			"status": data,
+		})
+	})
+	g.Run(":3030")
+}

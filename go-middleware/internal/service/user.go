@@ -13,6 +13,9 @@ import (
 type UserService interface {
 	GetUsers(ctx context.Context) ([]model.User, error)
 	GetUsersById(ctx context.Context, id uint64) (model.User, error)
+	DeleteUsersById(ctx context.Context, id uint64) (model.User, error)
+
+	// activity
 	SignUp(ctx context.Context, userSignUp model.UserSignUp) (model.User, error)
 
 	// misc
@@ -43,12 +46,33 @@ func (u *userServiceImpl) GetUsersById(ctx context.Context, id uint64) (model.Us
 	return user, err
 }
 
+func (u *userServiceImpl) DeleteUsersById(ctx context.Context, id uint64) (model.User, error) {
+	user, err := u.repo.GetUsersByID(ctx, id)
+	if err != nil {
+		return model.User{}, err
+	}
+	// if user doesn't exist, return
+	if user.ID == 0 {
+		return model.User{}, nil
+	}
+
+	// delete user by id
+	err = u.repo.DeleteUsersByID(ctx, id)
+	if err != nil {
+		return model.User{}, err
+	}
+
+	return user, err
+}
+
 func (u *userServiceImpl) SignUp(ctx context.Context, userSignUp model.UserSignUp) (model.User, error) {
 	// assumption: semua user adalah user baru
 	user := model.User{
-		Username:  userSignUp.Username,
-		FirstName: userSignUp.FirstName,
-		LastName:  userSignUp.LastName,
+		Username: userSignUp.Username,
+		Email:    userSignUp.Email,
+		DoB:      userSignUp.DoB,
+		// FirstName: userSignUp.FirstName,
+		// LastName:  userSignUp.LastName,
 	}
 
 	// encryption password
